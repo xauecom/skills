@@ -1,18 +1,14 @@
 # xauecom/skills
 
-Agent Skills for Claude Code and AI agents, following the [Agent Skills specification](https://agentskills.io/specification).
+A collection of reusable [Agent Skills](https://agentskills.io/specification) for AI coding agents.
 
 ## Installation
-
-### Claude Code
 
 ```bash
 npx skills add xauecom/skills
 ```
 
-### Manual
-
-Copy the desired skill folder into your project's `.claude/skills/` directory.
+Or manually copy the desired skill folder into your agent's skills directory.
 
 ## Available Skills
 
