@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "xaue-mcp-server": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/xauecom/xaue-mcp-server", "xaue-mcp-server"]
+    }
+  }
+}

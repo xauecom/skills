@@ -1,6 +1,51 @@
+# IDE and Editor
 .DS_Store
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
+*.sublime-project
+*.sublime-workspace
+
+# Environment and Secrets
 .env
+.env.local
+.env.*.local
+
+# Node
 node_modules/
+package-lock.json
+yarn.lock
+dist/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv
+pip-log.txt
+.pytest_cache/
+
+# Go
+*.o
+*.a
+*.so
+.go/
+
+# Temporary files
+*.tmp
+*.bak
+.claude/
+.claude_*
+/tmp/
+
+# Superpowers (design & plan docs - local iteration)
+docs/superpowers/
+
+# OS
+Thumbs.db
