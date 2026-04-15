@@ -1,0 +1,419 @@
+skill: xaue-trade
+version: '1.0'
+triggers:
+  keywords:
+    - What is XAUE
+    - XAUE information
+    - XAUE NAV
+    - XAUE price
+    - XAUE APY
+    - XAUE yield
+    - XAUE supply
+    - XAUE reserves
+    - XAUE backing
+    - XAUE health
+    - Is XAUE healthy
+    - XAUE overview
+    - XAUE exchange rate
+    - XAUT to XAUE
+  patterns:
+    - what.*XAUE
+    - XAUE.*(price|nav|value)
+    - XAUE.*(apy|yield)
+    - XAUE.*(supply|circulation)
+    - XAUE.*(reserves|backing)
+    - (is|check).*XAUE.*(healthy|health)
+    - XAUE.*(backing|backed)
+    - (XAUT|XAUE).*exchange.*rate
+    - XAUE.*overview
+
+config:
+  complexity: L2
+  timeout: 15s
+  model: sonnet
+
+cases:
+  # Knowledge Base Tests (3)
+  - id: kb_001
+    name: knowledge-what-is-xaue
+    input: What is XAUE?
+    expect:
+      contains:
+        - ["XAUE", "synthetic token", "Ethereum", "XAUT"]
+        - ["ERC-20", "backed"]
+      not_contains:
+        - ["xaue_get_nav", "xaue_get_apy", "xaue_get_supply"]
+      max_length: 1500
+    expectedToolCalls: []
+    description: Answer XAUE overview from knowledge base without MCP calls
+
+  - id: kb_002
+    name: knowledge-is-xaue-backed
+    input: Is XAUE backed? How does the backing work?
+    expect:
+      contains:
+        - ["backed", "XAUT", "1:1", "reserves", "custody"]
+      not_contains:
+        - ["xaue_get_nav", "xaue_get_reserves"]
+      max_length: 1500
+    expectedToolCalls: []
+    description: Explain XAUE backing model from knowledge base
+
+  - id: kb_003
+    name: knowledge-xaue-vs-xaut-comparison
+    input: What's the difference between XAUE and XAUT?
+    expect:
+      contains:
+        - ["XAUE", "XAUT", "difference", "synthetic", "native", "Ethereum"]
+        - ["multi-chain", "yield", "gold"]
+      not_contains:
+        - ["xaue_get_", "tool call"]
+      max_length: 2000
+    expectedToolCalls: []
+    description: Compare XAUE and XAUT using knowledge base
+
+  # NAV Query Tests (3)
+  - id: nav_001
+    name: query-xaue-nav-exchange-rate
+    input: What is the XAUE/XAUT exchange rate?
+    expect:
+      contains:
+        - ["Price", "NAV", "XAUE", "USD", "$"]
+        - ["Exchange Rate", "Updated"]
+      not_contains:
+        - ["APY", "supply", "reserves"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_nav
+        description: Retrieve current NAV for XAUE token
+    description: Query current XAUE NAV via xaue_get_nav
+
+  - id: nav_002
+    name: query-xaut-to-xaue-conversion
+    input: 1 XAUT to XAUE, what's the rate?
+    expect:
+      contains:
+        - ["XAUT", "XAUE", "rate", "exchange", "NAV"]
+      not_contains:
+        - ["APY", "supply", "reserves"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_nav
+        description: Get current NAV for conversion
+    description: Calculate XAUT to XAUE conversion rate using NAV
+
+  - id: nav_003
+    name: query-xaue-nav-per-shares
+    input: XAUE NAV per 1000 shares?
+    expect:
+      contains:
+        - ["NAV", "1000", "price", "XAUE"]
+        - ["calculation", "total", "$"]
+      not_contains:
+        - ["supply", "APY", "reserves"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_nav
+        description: Get NAV for per-share calculation
+    description: Calculate NAV for 1000 XAUE shares
+
+  # APY Query Tests (2)
+  - id: apy_001
+    name: query-xaue-apy-yield
+    input: What is XAUE's APY?
+    expect:
+      contains:
+        - ["APY", "yield", "%", "XAUE", "annual"]
+        - ["Updated"]
+      not_contains:
+        - ["price", "NAV", "supply", "reserves"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_apy
+        description: Retrieve current APY for XAUE
+    description: Query XAUE annual percentage yield
+
+  - id: apy_002
+    name: query-xaue-yield-rate
+    input: XAUE yield rate, what's the current return?
+    expect:
+      contains:
+        - ["yield", "APY", "%", "annual", "XAUE"]
+      not_contains:
+        - ["price", "supply", "reserves"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_apy
+        description: Get current XAUE yield rate
+    description: Query current yield rate for XAUE
+
+  - id: apy_003
+    name: query-xaue-annual-return
+    input: What annual return does XAUE provide?
+    expect:
+      contains:
+        - ["annual", "return", "APY", "yield", "%"]
+      not_contains:
+        - ["price", "NAV", "supply", "reserves"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_apy
+        description: Get annual return data
+    description: Query XAUE annual return information
+
+  # Supply Query Tests (2)
+  - id: supply_001
+    name: query-xaue-circulating-supply
+    input: How much XAUE is in circulation?
+    expect:
+      contains:
+        - ["supply", "circulating", "XAUE", "total", "tokens"]
+      not_contains:
+        - ["price", "NAV", "APY", "reserves"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_supply
+        description: Retrieve XAUE supply metrics
+    description: Query circulating supply of XAUE tokens
+
+  - id: supply_002
+    name: query-xaue-supply-metrics
+    input: XAUE supply, how many tokens exist?
+    expect:
+      contains:
+        - ["supply", "total", "circulating", "XAUE"]
+      not_contains:
+        - ["price", "reserves", "APY"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_supply
+        description: Get XAUE token supply metrics
+    description: Query total and circulating XAUE supply
+
+  # Reserves Query Tests (2)
+  - id: reserves_001
+    name: query-xaue-reserves-backing
+    input: What are XAUE's reserves?
+    expect:
+      contains:
+        - ["reserves", "XAUT", "backing", "held"]
+      not_contains:
+        - ["price", "NAV", "APY", "supply"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_reserves
+        description: Retrieve XAUE reserve amounts
+    description: Query XAUE reserve holdings
+
+  - id: reserves_002
+    name: query-xaue-reserve-verification
+    input: XAUE reserve check, how much XAUT is held?
+    expect:
+      contains:
+        - ["reserves", "XAUT", "held", "backing"]
+      not_contains:
+        - ["price", "APY", "supply"]
+      min_length: 80
+    expectedToolCalls:
+      - tool: xaue_get_reserves
+        description: Check reserve holdings for XAUE
+    description: Verify XAUE backing reserves
+
+  # Combined/Health Query Tests (3)
+  - id: health_001
+    name: query-xaue-health-check
+    input: Is XAUE healthy?
+    expect:
+      contains:
+        - ["Health", "XAUE", "status", "backing", "ratio"]
+        - ["Price", "Supply", "Reserves"]
+      not_contains:
+        - ["execution", "trading"]
+      min_length: 200
+    expectedToolCalls:
+      - tool: xaue_get_nav
+        description: Get current NAV
+      - tool: xaue_get_supply
+        description: Get supply metrics
+      - tool: xaue_get_reserves
+        description: Get reserve amounts
+    description: Combined health check calling NAV, supply, and reserves
+
+  - id: health_002
+    name: query-xaue-full-overview
+    input: XAUE overview, give me all metrics
+    expect:
+      contains:
+        - ["XAUE", "Price", "APY", "Supply", "Reserves", "Backing"]
+      not_contains:
+        - ["execution", "trade"]
+      min_length: 200
+    expectedToolCalls:
+      - tool: xaue_get_nav
+        description: Get NAV
+      - tool: xaue_get_supply
+        description: Get supply
+      - tool: xaue_get_reserves
+        description: Get reserves
+    description: Provide complete XAUE metrics overview
+
+  - id: health_003
+    name: query-xaue-backing-check
+    input: XAUE backing check, is it fully backed?
+    expect:
+      contains:
+        - ["backing", "ratio", "reserves", "supply", "XAUT"]
+      not_contains:
+        - ["trade", "execution"]
+      min_length: 150
+    expectedToolCalls:
+      - tool: xaue_get_nav
+        description: Get current NAV
+      - tool: xaue_get_supply
+        description: Get supply metrics
+      - tool: xaue_get_reserves
+        description: Get reserve holdings
+    description: Check XAUE backing ratio using combined tools
+
+  # Error Handling Tests (5)
+  - id: error_mcp_unavailable
+    name: error-mcp-server-unavailable
+    input: What is the current XAUE price?
+    error_scenario: mcp_unavailable
+    expect:
+      contains:
+        - ["MCP server", "not responding", "setup", "mcp-setup.md"]
+        - ["Restart Claude", ".mcp.json"]
+      not_contains:
+        - ["executed", "price data"]
+      min_length: 100
+    expectedToolCalls:
+      - tool: xaue_get_nav
+        description: Attempted NAV query (will fail with MCP unavailable)
+    description: Handle MCP server unavailability gracefully
+
+  - id: error_tool_timeout
+    name: error-tool-timeout-retry
+    input: How much XAUE is in circulation?
+    error_scenario: tool_timeout
+    expect:
+      contains:
+        - ["took too long", "timeout", "retry", "slowly"]
+        - ["try again", "mcp-setup.md"]
+      not_contains:
+        - ["supply data", "executed"]
+      min_length: 100
+    expectedToolCalls:
+      - tool: xaue_get_supply
+        description: Supply query that will timeout
+    description: Suggest retry for slow tool responses
+
+  - id: error_ambiguous_intent
+    name: error-ambiguous-price-intent
+    input: XAUE price?
+    error_scenario: ambiguous_intent
+    expect:
+      contains:
+        - ["could mean", "few things", "Did you mean", "price", "NAV", "trade"]
+      not_contains:
+        - ["data returned", "NAV: $"]
+      min_length: 100
+    expectedToolCalls: []
+    description: Clarify ambiguous price intent
+
+  - id: error_unsupported_trade
+    name: error-unsupported-trade-intent
+    input: Buy 10 XAUE for me
+    error_scenario: unsupported_trade
+    expect:
+      contains:
+        - ["not yet supported", "data only", "xaut-trade", "trade"]
+        - ["prices", "APY", "supply"]
+      not_contains:
+        - ["node swap.js", "executed", "tx hash"]
+      min_length: 100
+    expectedToolCalls: []
+    description: Explain skill provides data only, not trade execution
+
+  - id: error_backing_not_available
+    name: error-backing-feature-unavailable
+    input: Get XAUE backing information
+    error_scenario: backing_todo
+    expect:
+      contains:
+        - ["not yet available", "backing information", "feature", "being calculated"]
+      not_contains:
+        - ["backing ratio: 100%", "reserves: "]
+      min_length: 100
+    expectedToolCalls:
+      - tool: xaue_get_reserves
+        description: Backing info query (feature not yet available)
+    description: Indicate backing feature not yet available
+
+  - id: error_rpc_connectivity
+    name: error-rpc-connectivity-issue
+    input: What is the XAUE supply right now?
+    error_scenario: rpc_connectivity
+    expect:
+      contains:
+        - ["connectivity issue", "Ethereum mainnet", "temporary", "retry"]
+      not_contains:
+        - ["supply data", "tokens"]
+      min_length: 100
+    expectedToolCalls:
+      - tool: xaue_get_supply
+        description: Supply query with RPC connectivity failure
+    description: Handle temporary RPC connectivity issues
+
+suites:
+  smoke:
+    - kb_001
+    - nav_001
+    - apy_001
+    - supply_001
+    - reserves_001
+    - health_001
+    - error_mcp_unavailable
+
+  full:
+    - kb_001
+    - kb_002
+    - kb_003
+    - nav_001
+    - nav_002
+    - nav_003
+    - apy_001
+    - apy_002
+    - apy_003
+    - supply_001
+    - supply_002
+    - reserves_001
+    - reserves_002
+    - health_001
+    - health_002
+    - health_003
+    - error_mcp_unavailable
+    - error_tool_timeout
+    - error_ambiguous_intent
+    - error_unsupported_trade
+    - error_backing_not_available
+    - error_rpc_connectivity
+
+test_summary:
+  total_tests: 22
+  breakdown:
+    knowledge_base: 3
+    nav_queries: 3
+    apy_queries: 3
+    supply_queries: 2
+    reserves_queries: 2
+    health_queries: 3
+    error_handling: 6
+  test_categories:
+    - Knowledge Base Tests (3): "What is XAUE?", "Is XAUE backed?", "XAUE vs XAUT comparison"
+    - NAV Query Tests (3): "Exchange rate query", "XAUT to XAUE conversion", "NAV per 1000 shares"
+    - APY Query Tests (3): "Current APY", "Yield rate query", "Annual return query"
+    - Supply Query Tests (2): "Circulating supply", "Total supply metrics"
+    - Reserves Query Tests (2): "Reserve holdings", "Backing verification"
+    - Health Query Tests (3): "Health check (combined)", "Full overview (combined)", "Backing ratio check (combined)"
+    - Error Handling Tests (6): "MCP unavailable", "Tool timeout", "Ambiguous intent", "Unsupported trade", "Backing not yet available", "RPC connectivity"
