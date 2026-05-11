@@ -1,0 +1,19 @@
+{
+  "name": "xaue-router-scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLI for interacting with the XAUERouter contract (mint / requestRedeem / claim / status).",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "test": "node --test __tests__"
+  },
+  "dependencies": {
+    "b4a": "^1.6.7",
+    "ethers": "^6",
+    "js-yaml": "^4.1.0",
+    "sodium-native": "^5.0.8"
+  }
+}

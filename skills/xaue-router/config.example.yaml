@@ -1,0 +1,28 @@
+# xaue-router example config
+# Copy to ~/.aurehub/router.yaml, then replace REPLACE_ME with real addresses.
+#
+# Router / Nav4626 addresses are intentionally left as REPLACE_ME — the skill
+# will hard-stop until you fill them in, to avoid signing to an unknown address.
+
+contracts:
+  # XAUERouter proxy (upgradeable) — deployed per spec v0.1
+  router: "REPLACE_ME"
+  # Underlying Nav4626 vault (existing, not upgraded)
+  nav4626: "REPLACE_ME"
+
+tokens:
+  XAUE:
+    # Same as Nav4626 share token (per spec §6: share = XAUE/Nav4626 share token)
+    address: "REPLACE_ME"
+    decimals: 6   # confirm on-chain; adjust if Nav4626 uses different decimals
+
+# XAUT mainnet defaults are hardcoded (address + decimals + token_rules + event_scan).
+# Override here only when testing against a local fork:
+#
+# tokens:
+#   XAUT:
+#     address: "0x..."   # local fork mock address
+#     decimals: 6
+#
+# event_scan:
+#   default_lookback_blocks: 500
