@@ -24,17 +24,11 @@ export const ROUTER_ABI = [
   'function claimXaut(uint256 routerReqId)',
   'function claimRejectedShares(uint256 routerReqId)',
 
-  // --- write (admin) -------------------------------------------------------
-  'function setBlacklist(address account, bool blocked)',
-  'function pause()',
-  'function unpause()',
-
   // --- events --------------------------------------------------------------
   'event MintRouted(address indexed user, uint256 xautAmount, uint256 xaueAmount)',
   'event RedemptionRequestedViaRouter(uint256 indexed routerReqId, uint256 indexed navReqId, address indexed user, uint256 xaueAmount)',
   'event XautClaimed(uint256 indexed routerReqId, address indexed user, uint256 xautAmount)',
   'event RejectedSharesClaimed(uint256 indexed routerReqId, address indexed user, uint256 xaueAmount)',
-  'event BlacklistUpdated(address indexed account, bool blocked)',
 ];
 
 /**

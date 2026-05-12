@@ -33,9 +33,8 @@ test('rejects unknown command', () => {
   assert.throws(() => parseArgs(['teleport']));
 });
 
-test('parse set-blacklist with blocked flag', () => {
-  const out = parseArgs(['set-blacklist', '--account', '0xdead', '--blocked', 'false']);
-  assert.equal(out.command, 'set-blacklist');
-  assert.equal(out.account, '0xdead');
-  assert.equal(out.blocked, 'false');
+test('rejects removed admin commands', () => {
+  assert.throws(() => parseArgs(['set-blacklist', '--account', '0xdead', '--blocked', 'false']));
+  assert.throws(() => parseArgs(['pause']));
+  assert.throws(() => parseArgs(['unpause']));
 });

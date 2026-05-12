@@ -292,15 +292,6 @@ node router.js claim-rejected --req-id <routerReqId>
 
 输出：`{ "txHash": "0x...", "routerReqId": "N", "xaueAmount": "...", "status": "success" }`
 
-## 管理员操作（需要对应 Role）
-
-非日常流程，需 `msg.sender` 持有相应 Role 才会成功；否则 revert。不要在普通用户路径主动推荐。
-
-- `node router.js set-blacklist --account 0x... --blocked true|false` → 需要 `BLACKLIST_ADMIN_ROLE`
-- `node router.js pause` / `node router.js unpause` → 需要 `PAUSER_ROLE`
-
-写入前一律二次确认（影响其他用户）。
-
 ## Mandatory Safety Gates
 
 - ETH 余额不足：hard-stop 并提示最小补充量
@@ -352,15 +343,12 @@ Write：
 - `requestRedeem(uint256 xaueAmount) → uint256`
 - `claimXaut(uint256 routerReqId)`
 - `claimRejectedShares(uint256 routerReqId)`
-- `setBlacklist(address, bool)`
-- `pause()` / `unpause()`
 
 Events：
 - `MintRouted(address indexed user, uint256 xautAmount, uint256 xaueAmount)`
 - `RedemptionRequestedViaRouter(uint256 indexed routerReqId, uint256 indexed navReqId, address indexed user, uint256 xaueAmount)`
 - `XautClaimed(uint256 indexed routerReqId, address indexed user, uint256 xautAmount)`
 - `RejectedSharesClaimed(uint256 indexed routerReqId, address indexed user, uint256 xaueAmount)`
-- `BlacklistUpdated(address indexed account, bool blocked)`
 
 ## First-Turn Contract
 

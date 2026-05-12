@@ -19,10 +19,6 @@
  *   claim-rejected --req-id N                     — claim XAUE after rejection
  *   list           [--user 0x] [--from-block N]   — scan RedemptionRequestedViaRouter events
  *
- *   set-blacklist  --account 0x... --blocked B    — admin: BLACKLIST_ADMIN_ROLE
- *   pause                                         — admin: PAUSER_ROLE
- *   unpause                                       — admin: PAUSER_ROLE
- *
  * Common flags:
  *   --config <path>   override router.yaml path
  *   --json            force machine-readable output (default)
@@ -463,31 +459,6 @@ async function cmdClaimRejected(args) {
 }
 
 // --------------------------------------------------------------------------
-// admin: set-blacklist / pause / unpause
-// --------------------------------------------------------------------------
-
-async function cmdSetBlacklist(args) {
-  if (!args.account || !isAddress(args.account)) throw new Error('--account must be a valid address');
-  if (args.blocked == null) throw new Error('--blocked true|false is required');
-  const blocked = /^(true|1|yes|on)$/i.test(String(args.blocked));
-  const ctx = await buildContext({ configPath: args.configPath, needSigner: true });
-  const tx = await ctx.router.setBlacklist(args.account, blocked);
-  emit({ account: args.account, blocked, ...(await waitOk(tx, 'setBlacklist')) });
-}
-
-async function cmdPause(args) {
-  const ctx = await buildContext({ configPath: args.configPath, needSigner: true });
-  const tx = await ctx.router.pause();
-  emit({ action: 'pause', ...(await waitOk(tx, 'pause')) });
-}
-
-async function cmdUnpause(args) {
-  const ctx = await buildContext({ configPath: args.configPath, needSigner: true });
-  const tx = await ctx.router.unpause();
-  emit({ action: 'unpause', ...(await waitOk(tx, 'unpause')) });
-}
-
-// --------------------------------------------------------------------------
 // Dispatch
 // --------------------------------------------------------------------------
 
@@ -506,9 +477,6 @@ const HANDLERS = {
   'list':           cmdList,
   'claim-xaut':     cmdClaimXaut,
   'claim-rejected': cmdClaimRejected,
-  'set-blacklist':  cmdSetBlacklist,
-  'pause':          cmdPause,
-  'unpause':        cmdUnpause,
 };
 
 async function main() {

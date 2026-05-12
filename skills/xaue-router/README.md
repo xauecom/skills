@@ -86,8 +86,6 @@ xaue-router/
 | `list [--user 0x…] [--from-block N]` | Scan `RedemptionRequestedViaRouter` events |
 | `claim-xaut --req-id N` | Claim XAUT after approval |
 | `claim-rejected --req-id N` | Reclaim XAUE after rejection |
-| `set-blacklist --account 0x… --blocked true` | admin only |
-| `pause` / `unpause` | admin only |
 
 All commands emit single-line JSON to stdout; errors go to stderr with a non-zero exit code.
 

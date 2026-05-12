@@ -8,7 +8,6 @@ export const VALID_COMMANDS = new Set([
   'is-blacklisted', 'paused', 'config-show',
   'mint', 'request-redeem', 'status', 'request',
   'claim-xaut', 'claim-rejected', 'list',
-  'set-blacklist', 'pause', 'unpause',
 ]);
 
 export function parseArgs(argv) {
@@ -25,7 +24,6 @@ export function parseArgs(argv) {
       case '--token':      out.token = val;      i++; break;
       case '--req-id':     out.reqId = val;      i++; break;
       case '--account':    out.account = val;    i++; break;
-      case '--blocked':    out.blocked = val;    i++; break;
       case '--user':       out.user = val;       i++; break;
       case '--from-block': out.fromBlock = val;  i++; break;
       case '--config':     out.configPath = val; i++; break;
